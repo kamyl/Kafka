@@ -51,15 +51,6 @@ sub send {
     return $self->{'conn'}->send($data);
 }
 
-sub recv {
-    my $self = shift;
-    my $data;
-    while ( <$self->{'conn'}> ) {
-        $data .= $_;
-    }
-    return $data;
-}
-
 sub disconnect {
     my $self = shift;
     if ( $self->{'conn'} ) {

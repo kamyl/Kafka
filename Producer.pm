@@ -20,6 +20,7 @@ sub new {
 
     $self->{'request_key'} ||= 0;
     $self->{'compression'} ||= 0;
+    return bless $self;
 }
 
 sub send {

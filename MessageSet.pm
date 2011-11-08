@@ -6,14 +6,16 @@ use Carp;
 
 sub new {
     my $class = shift;
-    my %args = @_;
-    croak 'need a Kafka::Connection' if ( ! $args{'conn'} || ref $args{'conn'} ne 'Kafka::Consumer' );
+    my $stream = shift;
 
     my $self = {
         valid_byte_count    => 0
     };
 
-    my $data = $args{'conn'}->recv();
+    my $data;
+    while (<$stream>) {
+        $data .= $_;
+    }
     my $len = length($data);
     my $ptr = 0;
     while ( $ptr <= ($len-4) ) {
