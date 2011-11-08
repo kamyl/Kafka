@@ -2,7 +2,6 @@ package Kafka::BoundedByteBuffer::Recv;
 
 use strict;
 use Carp;
-use File::Temp;
 use Fcntl;
 
 sub new {
@@ -19,7 +18,7 @@ sub read_request_size {
     my $stream = shift;
 
     if ( ! $self->{'size_read'} ) {
-        sysread($stream, $self->{'size'}, 4);
+        read($stream, $self->{'size'}, 4);
         if ( ! $self->{'size'} ) {
             croak "Could not read from stream";
         }
@@ -40,20 +39,20 @@ sub read_from {
 
     my $read = $self->read_request_size($stream);
     if ( ! $self->{'buffer'} ) {
-        $self->{'buffer'} = File::Temp->new();
+        open($self->{'buffer'}, ">", undef);
     }
     if ( $self->{'buffer'} && ! $self->{'complete'} ) {
         my $buff_size = min(8192, $self->{'remaining_bytes'});
         if ( $buff_size > 0 ) {
             my $tmp;
-            my $actual_read = sysread($stream, $tmp, $buff_size);
+            my $actual_read = read($stream, $tmp, $buff_size);
             syswrite($self->{'buffer'}, $tmp);
             $self->{'remaining_bytes'} -= $actual_read;
             $read += $actual_read;
         }
 
         if ( $self->{'remaining_bytes'} <= 0 ) {
-            $self->{'buffer'}->seek(0, SEEK_SET);
+            seek($self->{'buffer'}, 0, 0);
             $self->{'complete'} = 1;
         }
     }

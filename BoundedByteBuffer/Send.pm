@@ -2,7 +2,6 @@ package Kafka::BoundedByteBuffer::Send;
 
 use strict;
 use Carp;
-use File::Temp;
 use Fcntl;
 
 sub new {
@@ -11,12 +10,12 @@ sub new {
 
     my $self = {
         size    => $freq->size_in_bytes() + 2,
-        buffer  => File::Temp->new(),
     };
+    open($self->{'buffer'}, ">", undef);
 
     syswrite($self->{'buffer'}, pack('n', $freq->{'id'}));
     $freq->write_to( stream => $self->{'buffer'} );
-    $self->{'buffer'}->seek(0, SEEK_SET);
+    seek($self->{'buffer'}, 0, 0);
     return bless $self;
 }
 
@@ -41,7 +40,7 @@ sub write_to {
     my $written = $self->write_request_size($stream);
     if ( $self->{'size_written'} && ! eof($self->{'buffer'}) ) {
         my $tmp;
-        if ( ! sysread($self->{'buffer'}, $tmp, 8192) ) {
+        if ( ! read($self->{'buffer'}, $tmp, 8192) ) {
             croak "Could not read from stream";
         }
         $written += syswrite($stream, $tmp);
