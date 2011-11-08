@@ -32,11 +32,11 @@ sub send {
     }
     $self->{'conn'}->connect();
     return $self->{'conn'}->send(
-        Kafka::Encode(
+        Kafka::Encode::encode_produce_request(
             request_id  => $self->{'request_key'},
             topic       => $args{'topic'},
-            partition   => $args{'partition'} || 0xFFFFFFFF,
-            mesages     => $args{'messages'},
+            partition   => $args{'partition'} || 0,
+            messages    => $args{'messages'},
             compression => $self->{'compression'}
         )
     );

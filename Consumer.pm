@@ -3,6 +3,8 @@ package Kafka::Consumer;
 use strict;
 use Kafka::Connection;
 use Kafka::Encode;
+use Kafka::BoundedByteBuffer::Send;
+use Kafka::BoundedByteBuffer::Recv;
 use Carp;
 use Fcntl;
 
@@ -38,14 +40,14 @@ sub send_request {
     my $freq = shift;
 
     my $send = Kafka::BoundedByteBuffer::Send->new($freq);
-    $send->write_completely($self->{'conn'});
+    $send->write_completely($self->{'conn'}{'conn'});
 }
 
 sub get_response {
     my $self = shift;
 
     my $resp = Kafka::BoundedByteBuffer::Recv->new();
-    $resp->read_completely($self->{'conn'});
+    $resp->read_completely($self->{'conn'}{'conn'});
     return $resp;
 }
 
