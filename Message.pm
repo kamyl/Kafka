@@ -7,12 +7,20 @@ use Digest::CRC qw(crc32);
 sub new {
     my $class = shift;
     my %args = @_;
+
     my $self = {
-        payload     => substr($args{'data'}, 6),
+        payload     => substr($args{'data'}, 4),
         compression => substr($args{'data'}, 1, 1),
     };
     $self->{'crc'} = crc32($self->{'payload'});
     $self->{'size'} = length($self->{'payload'});
+
+    return bless $self;
+}
+
+sub message {
+    my $self = shift;
+    return $self->{'payload'};
 }
 
 sub encode {

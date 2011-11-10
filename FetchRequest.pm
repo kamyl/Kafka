@@ -39,4 +39,10 @@ sub to_string {
     return 'id:' . $self->{'id'} . ' topic:' . $self->{'topic'} . ' part:' . $self->{'partition'} . ' offset:' . $self->{'offset'} . ' maxsize:' . $self->{'maxsize'};
 }
 
+sub offset {
+    my $self = shift;
+    $self->{'offset'} = shift if ( @_ );
+    return $self->{'offset'};
+}
+
 1;
