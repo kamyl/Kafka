@@ -5,6 +5,7 @@ use Kafka::Connection;
 use Kafka::Encode;
 use Kafka::BoundedByteBuffer::Send;
 use Kafka::BoundedByteBuffer::Recv;
+use Kafka::MessageSet;
 use Carp;
 use Fcntl;
 

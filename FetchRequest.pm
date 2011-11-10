@@ -1,6 +1,7 @@
 package Kafka::FetchRequest;
 
 use strict;
+use Kafka::RequestKeys;
 use Carp;
 
 sub new {
@@ -26,7 +27,6 @@ sub write_to {
     syswrite($args{'stream'}, pack('N', $self->{'partition'}));
     syswrite($args{'stream'}, pack('NN', $i1, $i2));
     syswrite($args{'stream'}, pack('N', $self->{'maxsize'}));
-    
 }
 
 sub size_in_bytes {
@@ -36,7 +36,7 @@ sub size_in_bytes {
 
 sub to_string {
     my $self = shift;
-    return 'topic:' . $self->{'topic'} . ', part:' . $self->{'partition'} . ' offset:' . $self->{'offset'} . ' maxSize:' . $self->{'maxSize'};
+    return 'id:' . $self->{'id'} . ' topic:' . $self->{'topic'} . ' part:' . $self->{'partition'} . ' offset:' . $self->{'offset'} . ' maxsize:' . $self->{'maxsize'};
 }
 
 1;

@@ -18,7 +18,7 @@ sub read_request_size {
     my $stream = shift;
 
     if ( ! $self->{'size_read'} ) {
-        read($stream, $self->{'size'}, 4);
+        recv($stream, $self->{'size'}, 4, 0);
         if ( ! $self->{'size'} ) {
             croak "Could not read from stream";
         }
